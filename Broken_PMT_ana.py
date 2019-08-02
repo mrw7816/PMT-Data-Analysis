@@ -24,6 +24,7 @@ win_charge = r.TH1F("Window Charge","Window Charge of KA0181",100,-2,10)
 pulse = r.TH1F("Pulse Charge","Pulse Charge of KA0181",100,0,40)
 charge_height = r.TH2F("Charge to Height","Charge to Height Ratio of KA0181",100,-1,10,100,-1,6000)
 height_width = r.TH2F("Height to Width","Height to Width Ratio of KA0181",100,0,0.01,100,0,0.001)
+After_Pulse = r.TH2F("Time vs Charge", "Time to Charge for KA0181"1000,0,14,1000,0,1200)
 for entryNum in range (0 , Ttree.GetEntries()):
     Ttree.GetEntry(entryNum)
     WCharge = getattr(Ttree,"fWindowCharge_pC")
@@ -33,10 +34,12 @@ for entryNum in range (0 , Ttree.GetEntries()):
     Npul = getattr(Ttree,"nPulses")
     RightE = getattr(Ttree,"fPulseRightEdge")
     LeftE = getattr(Ttree,"fPulseLeftEdge")
+    Time = getattr(Ttree,"fCalibratedTime")
     Pulse.SetSize(Npul)
     Height.SetSize(Npul)
     RightE.SetSize(Npul)
     LeftE.SetSize(Npul)
+    Time.SetSize(Npul)
     Pulse_Width = np.subtract(RightE,LeftE)
     win_charge.Fill(WCharge)
     for ipul in range(0,Npul-1):
@@ -45,6 +48,9 @@ for entryNum in range (0 , Ttree.GetEntries()):
         pulse.Fill(Pulse[ipul])
         ht_to_wd = Height[ipul]/Pulse_Width[ipul]
         height_width.Fill(Height[ipul], ht_to_wd)
+        if Time > 0.8
+            tm_to_ch = Time[ipul]/WCharge
+            After_Pulse.Fill(WCharge,tm_to_ch)
 
 win_charge.SetXTitle("Charge_pC")
 win_charge.SetYTitle("Counts")
