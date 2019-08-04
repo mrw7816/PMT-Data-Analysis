@@ -24,7 +24,7 @@ win_charge = r.TH1F("Window Charge","Window Charge of KA0181",100,-2,10)
 pulse = r.TH1F("Pulse Charge","Pulse Charge of KA0181",100,0,40)
 charge_height = r.TH2F("Charge to Height","Charge to Height Ratio of KA0181",100,-1,10,100,-1,6000)
 height_width = r.TH2F("Height to Width","Height to Width Ratio of KA0181",100,0,0.01,100,0,0.001)
-After_Pulse = r.TH2F("Time vs Charge", "Time to Charge for KA0181"1000,0,14,1000,0,1200)
+After_Pulse = r.TH2F("Time vs Charge", "Time to Charge for KA0181",1000,0,14,1000,0,1200)
 for entryNum in range (0 , Ttree.GetEntries()):
     Ttree.GetEntry(entryNum)
     WCharge = getattr(Ttree,"fWindowCharge_pC")
@@ -48,7 +48,7 @@ for entryNum in range (0 , Ttree.GetEntries()):
         pulse.Fill(Pulse[ipul])
         ht_to_wd = Height[ipul]/Pulse_Width[ipul]
         height_width.Fill(Height[ipul], ht_to_wd)
-        if Time > 0.8
+        if Time > 0.8 and WCharge != 0:
             tm_to_ch = Time[ipul]/WCharge
             After_Pulse.Fill(WCharge,tm_to_ch)
 
@@ -59,6 +59,8 @@ charge_height.SetXTitle("Charge")
 charge_height.SetYTitle("Charge/Height")
 height_width.SetXTitle("Height")
 height_width.SetYTitle("Height/Width")
+After_Pulse.SetXTitle("Charge")
+After_Pulse.SetYTitle("Time/Charge")
 win_charge.Scale(1.0/win_charge.Integral())
 charge_height.Scale(1.0/charge_height.Integral())
 
@@ -66,6 +68,7 @@ win_charge.SetDirectory(0)
 pulse.SetDirectory(0)
 charge_height.SetDirectory(0)
 height_width.SetDirectory(0)
+After_Pulse.SetDirectory(0)
 inFile.Close()
 
 outHistFile = r.TFile.Open(outFileName, "RECREATE")
@@ -74,4 +77,5 @@ win_charge.Write()
 pulse.Write()
 charge_height.Write()
 height_width.Write()
+After_Pulse.Write()
 outHistFile.Close()
