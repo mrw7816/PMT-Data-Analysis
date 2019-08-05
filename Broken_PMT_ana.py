@@ -74,7 +74,7 @@ outHistFile.Close()
 
 if Analysis_Type == "Afterpulsing":
     inFile = r.TFile.Open ( inFileName ," READ ")
-    Ttree = inFile.Get("Event")
+    Ttree = inFile.Get("event")
     After_Pulse = r.TH2F("Time vs Charge", "Time to Charge for KA0181",1000,0,14,1000,0,1200)
     for entryNum in range (0 , Ttree.GetEntries()):
         Ttree.GetEntry(entryNum)
