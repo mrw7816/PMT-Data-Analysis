@@ -39,7 +39,6 @@ for entryNum in range (0 , Ttree.GetEntries()):
     Height.SetSize(Npul)
     RightE.SetSize(Npul)
     LeftE.SetSize(Npul)
-    Time.SetSize(Npul)
     Pulse_Width = np.subtract(RightE,LeftE)
     win_charge.Fill(WCharge)
     for ipul in range(0,Npul-1):
@@ -63,7 +62,6 @@ win_charge.SetDirectory(0)
 pulse.SetDirectory(0)
 charge_height.SetDirectory(0)
 height_width.SetDirectory(0)
-After_Pulse.SetDirectory(0)
 inFile.Close()
 
 outHistFile = r.TFile.Open(outFileName, "RECREATE")
@@ -72,11 +70,11 @@ win_charge.Write()
 pulse.Write()
 charge_height.Write()
 height_width.Write()
-After_Pulse.Write()
 outHistFile.Close()
 
-if Analysis == "Afterpulsing"
+if Analysis_Type == "Afterpulsing":
     inFile = r.TFile.Open ( inFileName ," READ ")
+    Ttree = inFile.Get("Event")
     After_Pulse = r.TH2F("Time vs Charge", "Time to Charge for KA0181",1000,0,14,1000,0,1200)
     for entryNum in range (0 , Ttree.GetEntries()):
         Ttree.GetEntry(entryNum)
