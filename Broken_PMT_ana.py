@@ -23,8 +23,11 @@ inFile = r.TFile.Open ( inFileName ," READ ") #open the TFile
 Ttree = inFile.Get("event") #grabs the tree
 win_charge = r.TH1F("Window Charge","Window Charge of KA0181",100,-2,10)
 pulse = r.TH1F("Pulse Charge","Pulse Charge of KA0181",100,0,40)
+pulseheight = r.TH1F("Pulse Height", "Pulse Height of KA0181",100,0,2)
+pulsewidth = r.TH1F("Pulse Width", "Pulse Width of KA0181",100,0,100)
+h2w = r.TH1F("1D Height to Width", "Height to width of KA0181",100,0,1)
 charge_height = r.TH2F("Charge to Height","Charge to Height Ratio of KA0181",100,-1,10,100,-1,6000)
-height_width = r.TH2F("Height to Width","Height to Width Ratio of KA0181",100,0,0.01,100,0,0.001)
+height_width = r.TH2F("Height to Width vs Height","Height to Width Ratio vs Height of KA0181",100,0,0.01,100,0,0.001)
 
 for entryNum in range (0 , Ttree.GetEntries()):
     Ttree.GetEntry(entryNum)
@@ -45,6 +48,7 @@ for entryNum in range (0 , Ttree.GetEntries()):
         ch_to_ht = Pulse[ipul]/Height[ipul]
         charge_height.Fill(Pulse[ipul], ch_to_ht)
         pulse.Fill(Pulse[ipul])
+        pulseheight.Fill(Height[ipul])
         ht_to_wd = Height[ipul]/Pulse_Width[ipul]
         height_width.Fill(Height[ipul], ht_to_wd)
 
@@ -80,6 +84,7 @@ if Analysis_Type == "Afterpulsing":
         Ttree.GetEntry(entryNum)
         WCharge = getattr(Ttree,"fWindowCharge_pC")
         Time = getattr(Ttree,"fCalibratedTime")
+        Npul = getattr(Ttree,"nPulses")
         Time.SetSize(Npul)
         for ipul in range(0,Npul-1):
             if Time > 0.8 and WCharge != 0:
