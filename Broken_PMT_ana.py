@@ -63,6 +63,7 @@ After_Pulse.SetXTitle("Charge")
 After_Pulse.SetYTitle("Time/Charge")
 win_charge.Scale(1.0/win_charge.Integral())
 charge_height.Scale(1.0/charge_height.Integral())
+After_Pulse.Scale(1.0/After_Pulse.Integral())
 
 win_charge.SetDirectory(0)
 pulse.SetDirectory(0)
