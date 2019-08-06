@@ -89,6 +89,7 @@ if Analysis_Type == "Afterpulsing":
         for ipul in range(0,Npul-1):
             if Time > 0.8:
                 After_Pulse.Fill(WCharge,Time[ipul])
+                #Find way to add weights
 
     After_Pulse.SetXTitle("Charge_pC")
     After_Pulse.SetYTitle("Time/Charge")
