@@ -82,9 +82,9 @@ if Analysis_Type == "Afterpulsing":
         Time = getattr(Ttree,"fCalibratedTime")
         Time.SetSize(Npul)
         for ipul in range(0,Npul-1):
-            if Time > 0.8 and WCharge != 0:
-                tm_to_ch = Time[ipul]/WCharge
-                After_Pulse.Fill(WCharge,tm_to_ch)
+            if Time > 0.8:
+                After_Pulse.Fill(WCharge,Time[ipul])
+
     After_Pulse.SetXTitle("Charge_pC")
     After_Pulse.SetYTitle("Time/Charge")
     After_Pulse.Scale(1.0/After_Pulse.Integral())
