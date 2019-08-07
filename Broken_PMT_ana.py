@@ -99,7 +99,6 @@ if Analysis_Type == "Afterpulsing":
         for ipul in range(0,Npul-1):
             if Time > 0.8:
                 After_Pulse.Fill(WCharge,Time[ipul],Pulse[ipul])
-                #Find way to add weights
 
     After_Pulse.SetXTitle("Charge_pC")
     After_Pulse.SetYTitle("Time/Charge")
@@ -113,9 +112,9 @@ if Analysis_Type == "Afterpulsing":
 if Analysis_Type == "Stability":
     inFile = r.TFile.Open ( inFileName ," READ ")
     Ttree = inFile.Get("event")
-    win_charge = r.TH1F("Window Charge","Window Charge of KA0181",100,-2,10)
-    pulse = r.TH1F("Pulse Charge","Pulse Charge of KA0181",100,0,40)
-    pulseheight = r.TH1F("Pulse Height", "Pulse Height of KA0181",100,0,2)
+    swindow = r.TH1F("Window Charge","Window Charge of KA0181",100,-2,10)
+    spulse = r.TH1F("Pulse Charge","Pulse Charge of KA0181",100,0,40)
+    spulseheight = r.TH1F("Pulse Height", "Pulse Height of KA0181",100,0,2)
     for entryNum in range (0 , Ttree.GetEntries()):
         Ttree.GetEntry(entryNum)
         Npul = getattr(Ttree,"nPulses")
@@ -131,8 +130,8 @@ if Analysis_Type == "Stability":
         Pulse_Width = np.subtract(RightE,LeftE)
         win_charge.Fill(WCharge)
         for ipul in range(0,Npul-1):
-            pulse.Fill(Pulse[ipul])
-            pulseheight.Fill(Height[ipul])
+            spulse.Fill(Pulse[ipul])
+            spulseheight.Fill(Height[ipul])
 
     inFileName2 =r.TFile.Open(inFileName2 ,"READ")
     Ttree1 = inFile.Get("event")
