@@ -11,11 +11,12 @@ import array as ar
 import matplotlib.pyplot as plt
 import numpy as np
 if len(sys.argv) != 4:
-    print " USAGE : %s <input file > <output file >" %(sys.argv [0])
+    print " USAGE : %s <analysis type> <input file > <output file > <if analysis is Stability add last files>" %(sys.argv [0])
     sys.exit (1) #this if statement assures that you get three input params
 Analysis_Type = sys.argv[1]
 inFileName = sys.argv [2] #assigns variable names to input and output files
 outFileName = sys.argv [3]
+inFileName2 = sys.argv [4]
 print " Reading from ", inFileName , "and writing to", outFileName
 
 inFile = r.TFile.Open ( inFileName ," READ ") #open the TFile
@@ -49,11 +50,12 @@ for entryNum in range (0 , Ttree.GetEntries()):
         charge_height.Fill(Pulse[ipul], ch_to_ht)
         pulse.Fill(Pulse[ipul])
         pulseheight.Fill(Height[ipul])
+        pulsewidth.Fill(Pulse_Width[ipul])
         ht_to_wd = Height[ipul]/Pulse_Width[ipul]
+        h2w.Fill(ht_to_wd)
         height_width.Fill(Height[ipul], ht_to_wd)
 
 win_charge.SetXTitle("Charge_pC")
-win_charge.SetYTitle("Counts")
 pulse.SetXTitle("Charge_pC")
 charge_height.SetXTitle("Charge")
 charge_height.SetYTitle("Charge/Height")
@@ -66,6 +68,9 @@ win_charge.SetDirectory(0)
 pulse.SetDirectory(0)
 charge_height.SetDirectory(0)
 height_width.SetDirectory(0)
+pulsewidth.SetDirectory(0)
+pulseheight.SetDirectory(0)
+h2w.SetDirectory(0)
 inFile.Close()
 
 outHistFile = r.TFile.Open(outFileName, "RECREATE")
@@ -74,6 +79,9 @@ win_charge.Write()
 pulse.Write()
 charge_height.Write()
 height_width.Write()
+pulsewidth.Write()
+pulseheight.Write()
+h2w.Write()
 outHistFile.Close()
 
 if Analysis_Type == "Afterpulsing":
@@ -84,11 +92,13 @@ if Analysis_Type == "Afterpulsing":
         Ttree.GetEntry(entryNum)
         WCharge = getattr(Ttree,"fWindowCharge_pC")
         Time = getattr(Ttree,"fCalibratedTime")
+        Pulse = getattr(Ttree,"fPulseCharge_pC")
         Npul = getattr(Ttree,"nPulses")
         Time.SetSize(Npul)
+        Pulse.SetSize(Npul)
         for ipul in range(0,Npul-1):
             if Time > 0.8:
-                After_Pulse.Fill(WCharge,Time[ipul])
+                After_Pulse.Fill(WCharge,Time[ipul],Pulse[ipul])
                 #Find way to add weights
 
     After_Pulse.SetXTitle("Charge_pC")
@@ -99,3 +109,33 @@ if Analysis_Type == "Afterpulsing":
     outHistFile.cd()
     After_Pulse.Write()
     outHistFile.Close()
+
+if Analysis_Type == "Stability":
+    inFile = r.TFile.Open ( inFileName ," READ ")
+    Ttree = inFile.Get("event")
+    win_charge = r.TH1F("Window Charge","Window Charge of KA0181",100,-2,10)
+    pulse = r.TH1F("Pulse Charge","Pulse Charge of KA0181",100,0,40)
+    pulseheight = r.TH1F("Pulse Height", "Pulse Height of KA0181",100,0,2)
+    for entryNum in range (0 , Ttree.GetEntries()):
+        Ttree.GetEntry(entryNum)
+        Npul = getattr(Ttree,"nPulses")
+        WCharge = getattr(Ttree,"fWindowCharge_pC")
+        Pulse = getattr(Ttree,"fPulseCharge_pC")
+        Height = getattr(Ttree,"fPulseHeight_V")
+        RightE = getattr(Ttree,"fPulseRightEdge")
+        LeftE = getattr(Ttree,"fPulseLeftEdge")
+        Pulse.SetSize(Npul)
+        Height.SetSize(Npul)
+        RightE.SetSize(Npul)
+        LeftE.SetSize(Npul)
+        Pulse_Width = np.subtract(RightE,LeftE)
+        win_charge.Fill(WCharge)
+        for ipul in range(0,Npul-1):
+            pulse.Fill(Pulse[ipul])
+            pulseheight.Fill(Height[ipul])
+
+    inFileName2 =r.TFile.Open(inFileName2 ,"READ")
+    Ttree1 = inFile.Get("event")
+    for entryNum in range (0 , Ttree1.GetEntries()):
+        Ttree1.GetEntry(entryNum)
+        Npul = getattr(Ttree1,"nPulses")
