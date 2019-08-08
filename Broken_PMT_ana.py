@@ -16,7 +16,6 @@ if len(sys.argv) != 4:
 Analysis_Type = sys.argv[1]
 inFileName = sys.argv [2] #assigns variable names to input and output files
 outFileName = sys.argv [3]
-inFileName2 = sys.argv [4]
 print " Reading from ", inFileName , "and writing to", outFileName
 
 inFile = r.TFile.Open ( inFileName ," READ ") #open the TFile
@@ -97,7 +96,7 @@ if Analysis_Type == "Afterpulsing":
         Time.SetSize(Npul)
         Pulse.SetSize(Npul)
         for ipul in range(0,Npul-1):
-            if Time > 0.8:
+            if Pulse > float(0.8):
                 After_Pulse.Fill(WCharge,Time[ipul],Pulse[ipul])
 
     After_Pulse.SetXTitle("Charge_pC")
@@ -112,10 +111,30 @@ if Analysis_Type == "Afterpulsing":
 if Analysis_Type == "Stability":
     inFile = r.TFile.Open ( inFileName ," READ ")
     Ttree = inFile.Get("event")
-    swindow = r.TH1F("Window Charge","Window Charge of KA0181",100,-2,10)
-    spulse = r.TH1F("Pulse Charge","Pulse Charge of KA0181",100,0,40)
-    spulseheight = r.TH1F("Pulse Height", "Pulse Height of KA0181",100,0,2)
-    for entryNum in range (0 , Ttree.GetEntries()):
+    stability_window1 = r.TH1F("Early Window Charge","Window Charge of KA0181",100,-2,10)
+    stability_pulse1 = r.TH1F("Early Pulse Charge","Pulse Charge of KA0181",100,0,40)
+    stability_pulseheight1 = r.TH1F("Early Pulse Height", "Pulse Height of KA0181",100,0,2)
+    stability_pulsewidth1 = r.TH1F("Early Pulse Width", "Inital Pulse Width of ",100,0,2)
+    for entryNum in range (0 , 500000):
+        Ttree.GetEntry(entryNum)
+        Npul = getattr(Ttree,"nPulses")
+        WCharge = getattr(Ttree,"fWindowCharge_pC")
+        Pulse = getattr(Ttree,"fPulseCharge_pC")
+        Height = getattr(Ttree,"fPulseHeight_V")
+        RightE = getattr(Ttree,"fPulseRightEdge")
+        LeftE = getattr(Ttree,"fPulseLeftEdge")
+        Pulse.SetSize(Npul)
+        Height.SetSize(Npul)
+        RightE.SetSize(Npul)
+        LeftE.SetSize(Npul)
+        Pulse_Width1 = np.subtract(RightE,LeftE)
+        stability_window1.Fill(WCharge)
+        for ipul in range(0,Npul-1):
+            stability_pulse1.Fill(Pulse[ipul])
+            stability_pulseheight1.Fill(Height[ipul])
+            stability_pulsewidth1.Fill(Pulse_Width1[ipul])
+
+    for entryNum in range(2500000, Ttree.GetEntries()):
         Ttree.GetEntry(entryNum)
         Npul = getattr(Ttree,"nPulses")
         WCharge = getattr(Ttree,"fWindowCharge_pC")
@@ -128,13 +147,4 @@ if Analysis_Type == "Stability":
         RightE.SetSize(Npul)
         LeftE.SetSize(Npul)
         Pulse_Width = np.subtract(RightE,LeftE)
-        win_charge.Fill(WCharge)
-        for ipul in range(0,Npul-1):
-            spulse.Fill(Pulse[ipul])
-            spulseheight.Fill(Height[ipul])
-
-    inFileName2 =r.TFile.Open(inFileName2 ,"READ")
-    Ttree1 = inFile.Get("event")
-    for entryNum in range (0 , Ttree1.GetEntries()):
-        Ttree1.GetEntry(entryNum)
-        Npul = getattr(Ttree1,"nPulses")
+        stability_window1.Fill(WCharge)
