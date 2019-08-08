@@ -103,6 +103,7 @@ if Analysis_Type == "Afterpulsing":
     After_Pulse.SetYTitle("Time/Charge")
     After_Pulse.Scale(1.0/After_Pulse.Integral())
     After_Pulse.SetDirectory(0)
+    inFile.Close()
     outHistFile = r.TFile.Open(outFileName, "UPDATE")
     outHistFile.cd()
     After_Pulse.Write()
@@ -111,18 +112,12 @@ if Analysis_Type == "Afterpulsing":
 if Analysis_Type == "Stability":
     inFile = r.TFile.Open ( inFileName ," READ ")
     Ttree = inFile.Get("event")
-    stability_window1 = r.TH1F("Early Window Charge","Initial Window Charge of KA0181",100,-2,10)
     stability_pulse1 = r.TH1F("Early Pulse Charge","Initial Pulse Charge of KA0181",100,0,40)
     stability_pulseheight1 = r.TH1F("Early Pulse Height", "Initial Pulse Height of KA0181",100,0,2)
     stability_pulsewidth1 = r.TH1F("Early Pulse Width", "Inital Pulse Width of ",100,0,2)
-    stability_window2
-    stability_pulse2
-    stability_pulseheight2
-    stability_pulsewidth2
-    for entryNum in range (0 , 500000):
+    for entryNum in range (0 , Ttree.GetEntries()):
         Ttree.GetEntry(entryNum)
         Npul = getattr(Ttree,"nPulses")
-        WCharge = getattr(Ttree,"fWindowCharge_pC")
         Pulse = getattr(Ttree,"fPulseCharge_pC")
         Height = getattr(Ttree,"fPulseHeight_V")
         RightE = getattr(Ttree,"fPulseRightEdge")
@@ -132,32 +127,22 @@ if Analysis_Type == "Stability":
         RightE.SetSize(Npul)
         LeftE.SetSize(Npul)
         Pulse_Width1 = np.subtract(RightE,LeftE)
-        stability_window1.Fill(WCharge)
+        av_pulse = np.average(Pulse)
+        av_height = np.average(Height)
+        av_width = np.average(Pulse_Width1)
         for ipul in range(0,Npul-1):
-            stability_pulse1.Fill(Pulse[ipul])
-            stability_pulseheight1.Fill(Height[ipul])
-            stability_pulsewidth1.Fill(Pulse_Width1[ipul])
+            stability_pulse1.Fill(av_pulse[ipul])
+            stability_pulseheight1.Fill(av_height[ipul])
+            stability_pulsewidth1.Fill(av_width[ipul])
 
-    for entryNum in range(2500000, Ttree.GetEntries()):
-        Ttree.GetEntry(entryNum)
-        Npul = getattr(Ttree,"nPulses")
-        WCharge = getattr(Ttree,"fWindowCharge_pC")
-        Pulse = getattr(Ttree,"fPulseCharge_pC")
-        Height = getattr(Ttree,"fPulseHeight_V")
-        RightE = getattr(Ttree,"fPulseRightEdge")
-        LeftE = getattr(Ttree,"fPulseLeftEdge")
-        Pulse.SetSize(Npul)
-        Height.SetSize(Npul)
-        RightE.SetSize(Npul)
-        LeftE.SetSize(Npul)
-        Pulse_Width2 = np.subtract(RightE,LeftE)
-        stability_window2.Fill(WCharge)
-        for ipul in range(0,Npul-1):
-            stability_pulse2.Fill(Pulse[ipul])
-            stability_pulseheight2.Fill(Height[ipul])
-            stability.pulsewidth2.Fill(Pulse_width2[ipul])
+    stability_pulse1.SetDirectory(0)
+    stability_pulsewidth1.SetDirectory(0)
+    stability_pulseheight1.SetDirectory(0)
+    inFile.Close()
 
-    Pulse_Stability = stability_pulse2 / stability_pulse1
-    Height_Stability = stability_height2 / stability_height1
-    Width_Stability = stability_width2 / stability_width1
-
+    outHistFile = r.TFile.Open(outFileName, "UPDATE")
+    outHistFile.cd()
+    stability_pulse1.Write()
+    stability_pulsewidth1.Write()
+    stability_pulseheight1.Write()
+    outHistFile.Close()
