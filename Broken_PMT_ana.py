@@ -17,7 +17,7 @@ Analysis_Type = sys.argv[1]
 inFileName = sys.argv [2] #assigns variable names to input and output files
 outFileName = sys.argv [3]
 print " Reading from ", inFileName , "and writing to", outFileName
-"""
+
 inFile = r.TFile.Open ( inFileName ," READ ") #open the TFile
 
 Ttree = inFile.Get("event") #grabs the tree
@@ -82,7 +82,7 @@ pulsewidth.Write()
 pulseheight.Write()
 h2w.Write()
 outHistFile.Close()
-"""
+
 if Analysis_Type == "Afterpulsing":
     inFile = r.TFile.Open ( inFileName ," READ ")
     Ttree = inFile.Get("event")
@@ -113,9 +113,8 @@ if Analysis_Type == "Stability":
     inFile = r.TFile.Open ( inFileName ," READ ")
     Ttree = inFile.Get("event")
     stability_pulse1 = r.TH1F("Early Pulse Charge","Initial Pulse Charge of KA0181",100,0,40)
-    #stability_pulseheight1 = r.TH1F("Early Pulse Height", "Initial Pulse Height of KA0181",100,0,2)
-    #stability_pulsewidth1 = r.TH1F("Early Pulse Width", "Inital Pulse Width of ",100,0,2)
-    set_pulse = np.array([])
+    stability_pulseheight1 = r.TH1F("Early Pulse Height", "Initial Pulse Height of KA0181",100,0,2)
+    stability_pulsewidth1 = r.TH1F("Early Pulse Width", "Inital Pulse Width of ",100,0,2)
     for entryNum in range (0 , Ttree.GetEntries()):
         Ttree.GetEntry(entryNum)
         Npul = getattr(Ttree,"nPulses")
@@ -128,25 +127,22 @@ if Analysis_Type == "Stability":
         RightE.SetSize(Npul)
         LeftE.SetSize(Npul)
         Pulse_Width1 = np.subtract(RightE,LeftE)
-        set_pulse = np.append(set_pulse,[Pulse])
-        if len(set_pulse) == 10000:
-            for x in set_pulse:
-                for ipul in range(0,Npul-1):
-                    av_pulse = np.average(Pulse)
-                #av_height = np.average(Height)
-                #av_width = np.average(Pulse_Width1)
-                    stability_pulse1.Fill(av_pulse[ipul])
-                #stability_pulseheight1.Fill(av_height[ipul])
-                #stability_pulsewidth1.Fill(av_width[ipul])
+        av_pulse = np.average(Pulse)
+        av_height = np.average(Height)
+        av_width = np.average(Pulse_Width1)
+        for ipul in range(0,Npul-1):
+            stability_pulse1.Fill(av_pulse[ipul])
+            stability_pulseheight1.Fill(av_height[ipul])
+            stability_pulsewidth1.Fill(av_width[ipul])
 
     stability_pulse1.SetDirectory(0)
-    #stability_pulsewidth1.SetDirectory(0)
-    #stability_pulseheight1.SetDirectory(0)
+    stability_pulsewidth1.SetDirectory(0)
+    stability_pulseheight1.SetDirectory(0)
     inFile.Close()
 
     outHistFile = r.TFile.Open(outFileName, "UPDATE")
     outHistFile.cd()
     stability_pulse1.Write()
-    #stability_pulsewidth1.Write()
-    #stability_pulseheight1.Write()
+    stability_pulsewidth1.Write()
+    stability_pulseheight1.Write()
     outHistFile.Close()
