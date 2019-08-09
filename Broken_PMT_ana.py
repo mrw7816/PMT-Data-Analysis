@@ -10,6 +10,7 @@ import sys
 import array as ar
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 if len(sys.argv) != 4:
     print " USAGE : %s <analysis type> <input file > <output file > <if analysis is Stability add last files>" %(sys.argv [0])
     sys.exit (1) #this if statement assures that you get three input params
@@ -115,6 +116,7 @@ if Analysis_Type == "Stability":
     stability_pulse1 = r.TH1F("Early Pulse Charge","Initial Pulse Charge of KA0181",100,0,40)
     stability_pulseheight1 = r.TH1F("Early Pulse Height", "Initial Pulse Height of KA0181",100,0,2)
     stability_pulsewidth1 = r.TH1F("Early Pulse Width", "Inital Pulse Width of ",100,0,2)
+    av_pulse = []
     for entryNum in range (0 , Ttree.GetEntries()):
         Ttree.GetEntry(entryNum)
         Npul = getattr(Ttree,"nPulses")
@@ -127,22 +129,24 @@ if Analysis_Type == "Stability":
         RightE.SetSize(Npul)
         LeftE.SetSize(Npul)
         Pulse_Width1 = np.subtract(RightE,LeftE)
-        av_pulse = np.average(Pulse)
-        av_height = np.average(Height)
-        av_width = np.average(Pulse_Width1)
-        for ipul in range(0,Npul-1):
-            stability_pulse1.Fill(av_pulse[ipul])
-            stability_pulseheight1.Fill(av_height[ipul])
-            stability_pulsewidth1.Fill(av_width[ipul])
+        av_pulse.append([Pulse])
+        #for ipul in range(0,Npul-1):
+        #    stability_pulse1.Fill(av_pulse[ipul])
+        #    stability_pulseheight1.Fill(av_height[ipul])
+        #    stability_pulsewidth1.Fill(av_width[ipul])
+    pd.DataFrame(av_pulse)
+    rolling_mean = av_pulse.y.rolling(window=10000).mean()
+    print(rolling_mean)
 
-    stability_pulse1.SetDirectory(0)
-    stability_pulsewidth1.SetDirectory(0)
-    stability_pulseheight1.SetDirectory(0)
-    inFile.Close()
 
-    outHistFile = r.TFile.Open(outFileName, "UPDATE")
-    outHistFile.cd()
-    stability_pulse1.Write()
-    stability_pulsewidth1.Write()
-    stability_pulseheight1.Write()
-    outHistFile.Close()
+    #stability_pulse1.SetDirectory(0)
+    #stability_pulsewidth1.SetDirectory(0)
+    #stability_pulseheight1.SetDirectory(0)
+    #inFile.Close()
+
+    #outHistFile = r.TFile.Open(outFileName, "UPDATE")
+    #outHistFile.cd()
+    #stability_pulse1.Write()
+    #stability_pulsewidth1.Write()
+    #stability_pulseheight1.Write()
+    #outHistFile.Close()
