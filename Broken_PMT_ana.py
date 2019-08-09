@@ -116,7 +116,7 @@ if Analysis_Type == "Stability":
     stability_pulse1 = r.TH1F("Early Pulse Charge","Initial Pulse Charge of KA0181",100,0,40)
     stability_pulseheight1 = r.TH1F("Early Pulse Height", "Initial Pulse Height of KA0181",100,0,2)
     stability_pulsewidth1 = r.TH1F("Early Pulse Width", "Inital Pulse Width of ",100,0,2)
-    av_pulse = []
+    av_pulse = 0
     for entryNum in range (0 , Ttree.GetEntries()):
         Ttree.GetEntry(entryNum)
         Npul = getattr(Ttree,"nPulses")
@@ -124,12 +124,19 @@ if Analysis_Type == "Stability":
         Height = getattr(Ttree,"fPulseHeight_V")
         RightE = getattr(Ttree,"fPulseRightEdge")
         LeftE = getattr(Ttree,"fPulseLeftEdge")
+        Time = getattr(Ttree,"fCalibratedTime")
         Pulse.SetSize(Npul)
         Height.SetSize(Npul)
         RightE.SetSize(Npul)
         LeftE.SetSize(Npul)
+        Time.SetSize(Npul)
         Pulse_Width1 = np.subtract(RightE,LeftE)
-        av_pulse.append([Pulse])
+        if 18 < Time < 45:
+            av_pulse = av_pulse + Pulse
+        if len(av_pulse)%10000 == 0:
+            avp = av_pulse / 10000
+            
+
         #for ipul in range(0,Npul-1):
         #    stability_pulse1.Fill(av_pulse[ipul])
         #    stability_pulseheight1.Fill(av_height[ipul])
