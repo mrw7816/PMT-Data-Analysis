@@ -117,7 +117,9 @@ if Analysis_Type == "Stability":
     stability_pulseheight1 = r.TH1F("Early Pulse Height", "Initial Pulse Height of KA0181",100,0,2)
     stability_pulsewidth1 = r.TH1F("Early Pulse Width", "Inital Pulse Width of ",100,0,2)
     av_pulse = []
-    pulses = 0
+    pulse = 0
+    num = 0
+    pulses = []
     for entryNum in range (0 , Ttree.GetEntries()):
         Ttree.GetEntry(entryNum)
         Npul = getattr(Ttree,"nPulses")
@@ -132,15 +134,30 @@ if Analysis_Type == "Stability":
         LeftE.SetSize(Npul)
         Time.SetSize(Npul)
         Pulse_Width1 = np.subtract(RightE,LeftE)
+	pulses.append(np.array(Pulse))
+	for ipul in range(0,Npul-1):
+	    pulse = pulse + Pulse[ipul]
+	    num = num + Npul
+	if len(pulses) == 10000:
+	    av = pulse / num
+	    av_pulse.append(av)
+	    pulse = 0
+	    num = 0
+	    pulses = []
+	    print(len(av_pulse))
+"""
 	for ipul in range(0,Npul-1):
             if 18 < Time[ipul] < 45:
             	pulses = pulses + Pulse[ipul]
-            if len(av_pulse)%10000 == 0:
+		counter +=1
+            if counter == 10000:
                 avp = pulses / 10000
+		print(avp)
                 av_pulse.append(avp)
                 avp = 0
-    print(av_pulse)    
-
+		pulses = 0
+		print(len(av_pulse))
+"""
 
         #for ipul in range(0,Npul-1):
         #    stability_pulse1.Fill(av_pulse[ipul])
