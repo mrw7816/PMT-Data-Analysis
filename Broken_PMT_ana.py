@@ -18,7 +18,7 @@ Analysis_Type = sys.argv[1]
 inFileName = sys.argv [2] #assigns variable names to input and output files
 outFileName = sys.argv [3]
 print " Reading from ", inFileName , "and writing to", outFileName
-
+"""
 inFile = r.TFile.Open ( inFileName ," READ ") #open the TFile
 
 Ttree = inFile.Get("event") #grabs the tree
@@ -109,7 +109,7 @@ if Analysis_Type == "Afterpulsing":
     outHistFile.cd()
     After_Pulse.Write()
     outHistFile.Close()
-
+"""
 if Analysis_Type == "Stability":
     inFile = r.TFile.Open ( inFileName ," READ ")
     Ttree = inFile.Get("event")
@@ -132,12 +132,13 @@ if Analysis_Type == "Stability":
         LeftE.SetSize(Npul)
         Time.SetSize(Npul)
         Pulse_Width1 = np.subtract(RightE,LeftE)
-        if 18 < Time < 45:
-            pulses = pulses + Pulse
-        if len(av_pulse)%10000 == 0:
-            avp = pulses / 10000
-            av_pulse.append(avp)
-            avp = 0
+	for ipul in range(0,Npul-1):
+            if 18 < Time[ipul] < 45:
+            	pulses = pulses + Pulse[ipul]
+            if len(av_pulse)%10000 == 0:
+                avp = pulses / 10000
+                av_pulse.append(avp)
+                avp = 0
     print(av_pulse)    
 
 
@@ -145,9 +146,6 @@ if Analysis_Type == "Stability":
         #    stability_pulse1.Fill(av_pulse[ipul])
         #    stability_pulseheight1.Fill(av_height[ipul])
         #    stability_pulsewidth1.Fill(av_width[ipul])
-    pd.DataFrame(av_pulse)
-    rolling_mean = av_pulse.y.rolling(window=10000).mean()
-    print(rolling_mean)
 
 
     #stability_pulse1.SetDirectory(0)
