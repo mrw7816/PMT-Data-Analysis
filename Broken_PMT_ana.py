@@ -159,9 +159,12 @@ if Analysis_Type == "Stability":
             stability_pulsewidth1.Fill(avw)
 	    pulse = 0
 	    num = 0
+	    count = 0
 	    pulses = []
 
     x = ar.array('d',np.linspace(0,300,num=300))
+    mtpltlib = plt.plot(x,av_pulse)
+    plt.show()
     parray = ar.array('d',av_pulse)
     average_charge = r.TGraph(len(x),x,parray)
     average_charge.SetTitle("Average Pulse Charge over Measurment")
@@ -170,6 +173,7 @@ if Analysis_Type == "Stability":
     average_charge.SetMarkerSize(0.7)
     c = r.TCanvas('myCanvas')
     average_charge.Draw('ap')
+    c.SaveAs('av_pulseFIXED.png')
     stability_pulse1.SetDirectory(0)
     #stability_pulsewidth1.SetDirectory(0)
     #stability_pulseheight1.SetDirectory(0)
