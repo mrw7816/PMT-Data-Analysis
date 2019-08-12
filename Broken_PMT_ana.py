@@ -145,8 +145,9 @@ if Analysis_Type == "Stability":
 	    pulse = 0
 	    num = 0
 	    pulses = []
-	    print(len(av_pulse))
-
+    x = np.linspace(0,300,num = 300)
+    average = plt.plot(x,av_pulse)
+    plt.show()
     stability_pulse1.SetDirectory(0)
     #stability_pulsewidth1.SetDirectory(0)
     #stability_pulseheight1.SetDirectory(0)
