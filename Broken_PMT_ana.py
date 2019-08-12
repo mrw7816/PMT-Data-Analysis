@@ -141,11 +141,11 @@ if Analysis_Type == "Stability":
         if len(pulses) == 10000:
 	    av = pulse / num
 	    av_pulse.append(av)
+	    stability_pulse1.Fill(av)
 	    pulse = 0
 	    num = 0
 	    pulses = []
 	    print(len(av_pulse))
-        stability_pulse1.Fill(av_pulse)
 
     stability_pulse1.SetDirectory(0)
     #stability_pulsewidth1.SetDirectory(0)
