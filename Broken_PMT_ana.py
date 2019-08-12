@@ -145,6 +145,7 @@ if Analysis_Type == "Stability":
 	    num = 0
 	    pulses = []
 	    print(len(av_pulse))
+        stability_pulse1.Fill(av_pulse)
 """
 	for ipul in range(0,Npul-1):
             if 18 < Time[ipul] < 45:
@@ -165,14 +166,14 @@ if Analysis_Type == "Stability":
         #    stability_pulsewidth1.Fill(av_width[ipul])
 
 
-    #stability_pulse1.SetDirectory(0)
+    stability_pulse1.SetDirectory(0)
     #stability_pulsewidth1.SetDirectory(0)
     #stability_pulseheight1.SetDirectory(0)
     #inFile.Close()
 
-    #outHistFile = r.TFile.Open(outFileName, "UPDATE")
-    #outHistFile.cd()
-    #stability_pulse1.Write()
+    outHistFile = r.TFile.Open(outFileName, "UPDATE")
+    outHistFile.cd()
+    stability_pulse1.Write()
     #stability_pulsewidth1.Write()
     #stability_pulseheight1.Write()
-    #outHistFile.Close()
+    outHistFile.Close()
