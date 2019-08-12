@@ -136,13 +136,13 @@ if Analysis_Type == "Stability":
         Time.SetSize(Npul)
         Pulse_Width1 = np.subtract(RightE,LeftE)
 	for ipul in range(0,Npul-1):
-        if 18 < Time[ipul] <45:
-	       pulse = pulse + Pulse[ipul]
-           height += Height[ipul]
-           width += Pulse_Width1[ipul]
-           count += 1
-           pcharge.Fill(Pulse[ipul])
-        if entryNum % 10000 == 0:
+            if 18 < Time[ipul] <45:
+	        pulse += Pulse[ipul]
+           	height += Height[ipul]
+           	width += Pulse_Width1[ipul]
+           	count += 1
+           	pcharge.Fill(Pulse[ipul])
+        if entryNum != 0  and entryNum % 10000 == 0:
             avp = pulse / count
             av_pulse.append(avp)
             avh = height / count
@@ -155,7 +155,7 @@ if Analysis_Type == "Stability":
             count = 0
 
     x = ar.array('d',np.linspace(0,300,num=300))
-    puslearray = ar.array('d',av_pulse)
+    pulsearray = ar.array('d',av_pulse)
     average_charge = r.TGraph(len(x),x,pulsearray)
     average_charge.SetTitle("Average Pulse Charge over Measurment")
     average_charge.SetMarkerColor(2)
@@ -169,4 +169,5 @@ if Analysis_Type == "Stability":
     outHistFile = r.TFile.Open(outFileName, "UPDATE")
     outHistFile.cd()
     pcharge.Write()
+    average_charge.Write()
     outHistFile.Close()
