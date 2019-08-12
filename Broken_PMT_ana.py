@@ -138,7 +138,7 @@ if Analysis_Type == "Stability":
 	for ipul in range(0,Npul-1):
 	    pulse = pulse + Pulse[ipul]
 	    num = num + Npul
-	if len(pulses) == 10000:
+        if len(pulses) == 10000:
 	    av = pulse / num
 	    av_pulse.append(av)
 	    pulse = 0
@@ -146,34 +146,15 @@ if Analysis_Type == "Stability":
 	    pulses = []
 	    print(len(av_pulse))
         stability_pulse1.Fill(av_pulse)
-"""
-	for ipul in range(0,Npul-1):
-            if 18 < Time[ipul] < 45:
-            	pulses = pulses + Pulse[ipul]
-		counter +=1
-            if counter == 10000:
-                avp = pulses / 10000
-		print(avp)
-                av_pulse.append(avp)
-                avp = 0
-		pulses = 0
-		print(len(av_pulse))
-"""
 
-        #for ipul in range(0,Npul-1):
-        #    stability_pulse1.Fill(av_pulse[ipul])
-        #    stability_pulseheight1.Fill(av_height[ipul])
-        #    stability_pulsewidth1.Fill(av_width[ipul])
-
-
-   stability_pulse1.SetDirectory(0)
+    stability_pulse1.SetDirectory(0)
     #stability_pulsewidth1.SetDirectory(0)
     #stability_pulseheight1.SetDirectory(0)
     #inFile.Close()
 
-   outHistFile = r.TFile.Open(outFileName, "UPDATE")
-   outHistFile.cd()
-   stability_pulse1.Write()
+    outHistFile = r.TFile.Open(outFileName, "UPDATE")
+    outHistFile.cd()
+    stability_pulse1.Write()
     #stability_pulsewidth1.Write()
     #stability_pulseheight1.Write()
-   outHistFile.Close()
+    outHistFile.Close()
