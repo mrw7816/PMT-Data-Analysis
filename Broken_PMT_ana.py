@@ -139,30 +139,31 @@ if Analysis_Type == "Stability":
         LeftE.SetSize(Npul)
         Time.SetSize(Npul)
         Pulse_Width1 = np.subtract(RightE,LeftE)
-	    pulses.append(np.array(Pulse))
+	pulses.append(np.array(Pulse))
 	for ipul in range(0,Npul-1):
-        if 18 < Time[ipul] <45:
-	           pulse = pulse + Pulse[ipul]
-               height = height + Height[ipul]
-               width = width + Pulse_Width1[ipul]
-               count += 1
-               num = num + count
+            if 18 < Time[ipul] <45:
+	        pulse = pulse + Pulse[ipul]
+                height = height + Height[ipul]
+                width = width + Pulse_Width1[ipul]
+                count += 1
+                num = num + count
         if len(pulses) == 10000:
 	    avp = pulse / num
 	    av_pulse.append(avp)
 	    stability_pulse1.Fill(avp)
-        avh = height / num
-        av_height.append(avh)
-        stability_pulseheight1.Fill(avh)
-        avw = width/num
-        av_width.append(avw)
-        stability_pulsewidth1.Fill(avw)
+            avh = height / num
+            av_height.append(avh)
+            stability_pulseheight1.Fill(avh)
+            avw = width/num
+            av_width.append(avw)
+            stability_pulsewidth1.Fill(avw)
 	    pulse = 0
 	    num = 0
 	    pulses = []
 
-    x = linspace(0,300,num=300)
-    average_charge = r.TGraph(len(av_pulse),x,av_pulse)
+    x = ar.array('d',np.linspace(0,300,num=300))
+    parray = ar.array('d',av_pulse)
+    average_charge = r.TGraph(len(x),x,parray)
     average_charge.SetTitle("Average Pulse Charge over Measurment")
     average_charge.SetMarkerColor(2)
     average_charge.SetMarkerStyle(20)
