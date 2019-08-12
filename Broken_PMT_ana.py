@@ -112,19 +112,15 @@ if Analysis_Type == "Afterpulsing":
 """
 if Analysis_Type == "Stability":
     inFile = r.TFile.Open ( inFileName ," READ ")
+    pcharge = r.TH1F("Pulse Charge","Pulse Charge",100,0,40)
     Ttree = inFile.Get("event")
-    stability_pulse1 = r.TH1F("Early Pulse Charge","Initial Pulse Charge of KA0181",100,0,40)
-    stability_pulseheight1 = r.TH1F("Early Pulse Height", "Initial Pulse Height of KA0181",100,0,2)
-    stability_pulsewidth1 = r.TH1F("Early Pulse Width", "Inital Pulse Width of ",100,0,2)
     av_pulse = []
     av_height = []
     av_width = []
-    pulses = []
     pulse = 0
     height = 0
     width = 0
     count = 0
-    num = 0
     for entryNum in range (0 , Ttree.GetEntries()):
         Ttree.GetEntry(entryNum)
         Npul = getattr(Ttree,"nPulses")
@@ -139,49 +135,38 @@ if Analysis_Type == "Stability":
         LeftE.SetSize(Npul)
         Time.SetSize(Npul)
         Pulse_Width1 = np.subtract(RightE,LeftE)
-	pulses.append(np.array(Pulse))
 	for ipul in range(0,Npul-1):
-            if 18 < Time[ipul] <45:
-	        pulse = pulse + Pulse[ipul]
-                height = height + Height[ipul]
-                width = width + Pulse_Width1[ipul]
-                count += 1
-                num = num + count
-        if len(pulses) == 10000:
-	    avp = pulse / num
-	    av_pulse.append(avp)
-	    stability_pulse1.Fill(avp)
-            avh = height / num
+        if 18 < Time[ipul] <45:
+	       pulse = pulse + Pulse[ipul]
+           height += Height[ipul]
+           width += Pulse_Width1[ipul]
+           count += 1
+           pcharge.Fill(Pulse[ipul])
+        if entryNum % 10000 == 0:
+            avp = pulse / count
+            av_pulse.append(avp)
+            avh = height / count
             av_height.append(avh)
-            stability_pulseheight1.Fill(avh)
-            avw = width/num
+            avw = width / count
             av_width.append(avw)
-            stability_pulsewidth1.Fill(avw)
-	    pulse = 0
-	    num = 0
-	    count = 0
-	    pulses = []
+            pulse = 0
+            height = 0
+            width = 0
+            count = 0
 
     x = ar.array('d',np.linspace(0,300,num=300))
-    mtpltlib = plt.plot(x,av_pulse)
-    plt.show()
-    parray = ar.array('d',av_pulse)
-    average_charge = r.TGraph(len(x),x,parray)
+    puslearray = ar.array('d',av_pulse)
+    average_charge = r.TGraph(len(x),x,pulsearray)
     average_charge.SetTitle("Average Pulse Charge over Measurment")
     average_charge.SetMarkerColor(2)
     average_charge.SetMarkerStyle(20)
     average_charge.SetMarkerSize(0.7)
     c = r.TCanvas('myCanvas')
     average_charge.Draw('ap')
-    c.SaveAs('av_pulseFIXED.png')
-    stability_pulse1.SetDirectory(0)
-    #stability_pulsewidth1.SetDirectory(0)
-    #stability_pulseheight1.SetDirectory(0)
+    pcharge.SetDirectory(0)
     inFile.Close()
 
     outHistFile = r.TFile.Open(outFileName, "UPDATE")
     outHistFile.cd()
-    stability_pulse1.Write()
-    #stability_pulsewidth1.Write()
-    #stability_pulseheight1.Write()
+    pcharge.Write()
     outHistFile.Close()
