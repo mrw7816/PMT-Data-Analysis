@@ -112,7 +112,11 @@ if Analysis_Type == "Afterpulsing":
 
 if Analysis_Type == "Stability":
     inFile = r.TFile.Open ( inFileName ," READ ")
-    pcharge = r.TH1F("Pulse Charge","Pulse Charge",100,0,40)
+    Sample_Window = r.TH1F("Sample Window Charge","Sample Window Charge",100,-2,10)
+    pcharge = r.TH1F("Pulse Charge for Sample Window 18 - 45","Sample Pulse Charge",100,0,40)
+    2DHeight_Average = r.TH2F("2d Height","Height to File Number",100,-1,10,100,-1,6000)
+    2DCharge_Average = r.TH2F("2d Charge","Charge to File Number",100,0,0.01,100,0,0.001)
+    2DWidth_Average = r.TH2F("2d Width","Width to File Number",100,0,0.01,100,0,0.001)
     Ttree = inFile.Get("event")
     av_pulse = []
     av_height = []
@@ -135,14 +139,14 @@ if Analysis_Type == "Stability":
         LeftE.SetSize(Npul)
         Time.SetSize(Npul)
         Pulse_Width1 = np.subtract(RightE,LeftE)
-	for ipul in range(0,Npul-1):
+        for ipul in range(0,Npul-1):
             if 18 < Time[ipul] <45:
 	        pulse += Pulse[ipul]
            	height += Height[ipul]
            	width += Pulse_Width1[ipul]
            	count += 1
            	pcharge.Fill(Pulse[ipul])
-        if entryNum != 0  and entryNum % 10000 == 0:
+        if (entryNum+1) % 10000 == 0:
             avp = pulse / count
             av_pulse.append(avp)
             avh = height / count
@@ -154,7 +158,9 @@ if Analysis_Type == "Stability":
             width = 0
             count = 0
 
-    x = ar.array('d',np.linspace(0,299,num=300))
+    x = ar.array('d',np.linspace(0,len(av_pulse),num=len(av_pulse)))
+    fitFunc = r.TF1('fitFunc','pol1(0)',0,300)
+
     pulsearray = ar.array('d',av_pulse)
     average_charge = r.TGraph(len(x),x,pulsearray)
     average_charge.SetTitle("Average Pulse Charge over Measurment")
@@ -163,6 +169,8 @@ if Analysis_Type == "Stability":
     average_charge.SetMarkerColor(2)
     average_charge.SetMarkerStyle(20)
     average_charge.SetMarkerSize(0.7)
+    r.gStyle.SetOptFit() 
+    average_charge.Fit('fitfunc')
 
     heightarray = ar.array('d',av_height)
     average_height = r.TGraph(len(x),x,heightarray)
@@ -180,7 +188,12 @@ if Analysis_Type == "Stability":
     average_height.SetMarkerStyle(20)
     average_height.SetMarkerSize(0.7)
 
+    2DCharge_Average.Fill(pulsearray,x)
+    2DCharge_Average.SetXTitle("File Number")
+    2DCharge_Average.SetYTitle("Sampled Pulse Charge pC")
+
     pcharge.SetDirectory(0)
+    average_charge.SetDirectory(0)
     inFile.Close()
 
     outHistFile = r.TFile.Open(outFileName, "UPDATE")
@@ -189,4 +202,5 @@ if Analysis_Type == "Stability":
     average_charge.Write()
     average_height.Write()
     average_width.Write()
+    2DCharge_Average.Write()
     outHistFile.Close()
