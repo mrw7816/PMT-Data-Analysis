@@ -18,7 +18,7 @@ Analysis_Type = sys.argv[1]
 inFileName = sys.argv [2] #assigns variable names to input and output files
 outFileName = sys.argv [3]
 print " Reading from ", inFileName , "and writing to", outFileName
-"""
+
 inFile = r.TFile.Open ( inFileName ," READ ") #open the TFile
 
 Ttree = inFile.Get("event") #grabs the tree
@@ -109,7 +109,7 @@ if Analysis_Type == "Afterpulsing":
     outHistFile.cd()
     After_Pulse.Write()
     outHistFile.Close()
-"""
+
 if Analysis_Type == "Stability":
     inFile = r.TFile.Open ( inFileName ," READ ")
     pcharge = r.TH1F("Pulse Charge","Pulse Charge",100,0,40)
@@ -154,10 +154,12 @@ if Analysis_Type == "Stability":
             width = 0
             count = 0
 
-    x = ar.array('d',np.linspace(0,300,num=300))
+    x = ar.array('d',np.linspace(0,299,num=300))
     pulsearray = ar.array('d',av_pulse)
     average_charge = r.TGraph(len(x),x,pulsearray)
     average_charge.SetTitle("Average Pulse Charge over Measurment")
+    average_charge.SetXTitle("File Number")
+    average_charge.SetYTitle("Pulse Charge pC")
     average_charge.SetMarkerColor(2)
     average_charge.SetMarkerStyle(20)
     average_charge.SetMarkerSize(0.7)
@@ -165,6 +167,8 @@ if Analysis_Type == "Stability":
     heightarray = ar.array('d',av_height)
     average_height = r.TGraph(len(x),x,heightarray)
     average_height.SetTitle("Average Pulse Height over Measurment")
+    average_charge.SetXTitle("File Number")
+    average_charge.SetYTitle("Pulse Height V")
     average_height.SetMarkerColor(2)
     average_height.SetMarkerStyle(20)
     average_height.SetMarkerSize(0.7)
