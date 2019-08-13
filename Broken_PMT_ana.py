@@ -161,8 +161,21 @@ if Analysis_Type == "Stability":
     average_charge.SetMarkerColor(2)
     average_charge.SetMarkerStyle(20)
     average_charge.SetMarkerSize(0.7)
-    c = r.TCanvas('myCanvas')
-    average_charge.Draw('ap')
+
+    heightarray = ar.array('d',av_height)
+    average_height = r.TGraph(len(x),x,heightarray)
+    average_height.SetTitle("Average Pulse Height over Measurment")
+    average_height.SetMarkerColor(2)
+    average_height.SetMarkerStyle(20)
+    average_height.SetMarkerSize(0.7)
+
+    widtharray = ar.array('d',av_width)
+    average_width = r.TGraph(len(x),x,widtharray)
+    average_width.SetTitle("Average Pulse Width over Measurment")
+    average_width.SetMarkerColor(2)
+    average_height.SetMarkerStyle(20)
+    average_height.SetMarkerSize(0.7)
+
     pcharge.SetDirectory(0)
     inFile.Close()
 
@@ -170,4 +183,6 @@ if Analysis_Type == "Stability":
     outHistFile.cd()
     pcharge.Write()
     average_charge.Write()
+    average_height.Write()
+    average_width.Write()
     outHistFile.Close()
