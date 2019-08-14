@@ -23,13 +23,13 @@ print " Reading from ", inFileName , "and writing to", outFileName
 inFile = r.TFile.Open ( inFileName ," READ ") #open the TFile
 
 Ttree = inFile.Get("event") #grabs the tree
-win_charge = r.TH1F("Window Charge","Window Charge of PMT ",100,-2,10)
-pulse = r.TH1F("Pulse Charge","Pulse Charge of PMT"sys.argv[2],100,0,40)
-pulseheight = r.TH1F("Pulse Height", "Pulse Height of PMT",100,0,2)
-pulsewidth = r.TH1F("Pulse Width", "Pulse Width of PMT",100,0,100)
-h2w = r.TH1F("1D Height to Width", "Height to width of PMT",100,0,1)
-charge_height = r.TH2F("Charge to Height","Charge to Height Ratio of PMT",100,-1,10,100,-1,6000)
-height_width = r.TH2F("Height to Width vs Height","Height to Width Ratio vs Height of PMT",100,0,0.01,100,0,0.001)
+win_charge = r.TH1F("Window Charge","Window Charge of KA0181 ",100,-2,10)
+pulse = r.TH1F("Pulse Charge","Pulse Charge of KA0181",100,0,40)
+pulseheight = r.TH1F("Pulse Height", "Pulse Height of KA0181",100,0,2)
+pulsewidth = r.TH1F("Pulse Width", "Pulse Width of KA0181",100,0,100)
+h2w = r.TH1F("1D Height to Width", "Height to width of KA0181",100,0,1)
+charge_height = r.TH2F("Charge to Height","Charge to Height Ratio of KA0181",100,-1,10,100,-1,6000)
+height_width = r.TH2F("Height to Width vs Height","Height to Width Ratio vs Height of KA0181",100,0,0.01,100,0,0.001)
 
 for entryNum in range (0 , Ttree.GetEntries()):
     Ttree.GetEntry(entryNum)
@@ -88,7 +88,7 @@ outHistFile.Close()
 if Analysis_Type == "Afterpulsing":
     inFile = r.TFile.Open ( inFileName ," READ ")
     Ttree = inFile.Get("event")
-    After_Pulse = r.TH2F("Time vs Charge", "Time to Charge for PMT",1000,0,14,1000,0,1200)
+    After_Pulse = r.TH2F("Time vs Charge", "Time to Charge for KA0181",1000,0,14,1000,0,1200)
     for entryNum in range (0 , Ttree.GetEntries()):
         Ttree.GetEntry(entryNum)
         WCharge = getattr(Ttree,"fWindowCharge_pC")
@@ -113,11 +113,11 @@ if Analysis_Type == "Afterpulsing":
 
 if Analysis_Type == "Stability":
     inFile = r.TFile.Open ( inFileName ," READ ")
-    Sample_Window = r.TH1F("Sample Window Charge","Sample Window Charge PMT",100,-2,10)
-    pcharge = r.TH1F("Pulse Charge for Sample Window 18 - 45","Sample Pulse Charge PMT",100,0,40)
-    twoDHeight_Average = r.TH2F("2d Height","Height to File Number PMT",300,0,300,300,0,5)
-    twoDCharge_Average = r.TH2F("2d Charge","Charge to File Number PMT",100,0,0.01,100,0,0.001)
-    twoDWidth_Average = r.TH2F("2d Width","Width to File Number PMT",100,0,0.01,100,0,0.001)
+    Sample_Window = r.TH1F("Sample Window Charge","Sample Window Charge KA0181",100,-2,10)
+    pcharge = r.TH1F("Pulse Charge for Sample Window 18 - 45","Sample Pulse Charge KA0181",100,0,40)
+    twoDHeight_Average = r.TH2F("2d Height","Height to File Number KA0181",300,0,300,300,0,5)
+    twoDCharge_Average = r.TH2F("2d Charge","Charge to File Number KA0181",100,0,0.01,100,0,0.001)
+    twoDWidth_Average = r.TH2F("2d Width","Width to File Number KA0181",100,0,0.01,100,0,0.001)
     Ttree = inFile.Get("event")
     av_pulse = []
     av_height = []
@@ -169,7 +169,7 @@ if Analysis_Type == "Stability":
 
     pulsearray = ar.array('d',av_pulse)
     average_charge = r.TGraph(len(x),x,pulsearray)
-    average_charge.SetTitle("Average Pulse Charge over Measurment PMT")
+    average_charge.SetTitle("Average Pulse Charge over Measurment KA0181")
     average_charge.SetMarkerColor(2)
     average_charge.SetMarkerStyle(20)
     average_charge.SetMarkerSize(0.7)
@@ -178,7 +178,7 @@ if Analysis_Type == "Stability":
 
     heightarray = ar.array('d',av_height)
     average_height = r.TGraph(len(x),x,heightarray)
-    average_height.SetTitle("Average Pulse Height over Measurment PMT")
+    average_height.SetTitle("Average Pulse Height over Measurment KA0181")
     average_height.SetMarkerColor(2)
     average_height.SetMarkerStyle(20)
     average_height.SetMarkerSize(0.7)
@@ -186,7 +186,7 @@ if Analysis_Type == "Stability":
 
     widtharray = ar.array('d',av_width)
     average_width = r.TGraph(len(x),x,widtharray)
-    average_width.SetTitle("Average Pulse Width over Measurment PMT")
+    average_width.SetTitle("Average Pulse Width over Measurment KA0181")
     average_width.SetMarkerColor(2)
     average_width.SetMarkerStyle(20)
     average_width.SetMarkerSize(0.7)
