@@ -120,8 +120,11 @@ if Analysis_Type == "Stability":
     twoDWidth_Average = r.TH2F("2d Width","Width to File Number KA0193",100,0,0.01,100,0,0.001)
     Ttree = inFile.Get("event")
     av_pulse = []
+    av_pulseSTD = []
     av_height = []
+    av_heightSTD = []
     av_width = []
+    av_widthSTD = []
     pulse = 0
     height = 0
     width = 0
@@ -152,11 +155,17 @@ if Analysis_Type == "Stability":
            	pcharge.Fill(Pulse[ipul])
         if (entryNum+1) % 10000 == 0:
             avp = pulse / count
+            pulse_std = np.std(pulse)
             av_pulse.append(avp)
+            av_pulseSTD.append(pulse_std)
             avh = height / count
+            height_std = np.std(height)
             av_height.append(avh)
+            av_heightSTD.append(height_std)
             avw = width / count
+            width_std = np.std(width)
             av_width.append(avw)
+            av_widthSTD.append(width_std)
             pulse = 0
             height = 0
             width = 0
@@ -168,7 +177,8 @@ if Analysis_Type == "Stability":
     fitFunc = r.TF1('fitFunc','pol1(0)',0,300)
 
     pulsearray = ar.array('d',av_pulse)
-    average_charge = r.TGraph(len(x),x,pulsearray)
+    pstdarray = ar.array('d',av_pulseSTD)
+    average_charge = r.TGraphErrors(len(x),x,pulsearray,0.0,pstdarray)
     average_charge.SetTitle("Average Pulse Charge over Measurment KA0193")
     average_charge.SetMarkerColor(2)
     average_charge.SetMarkerStyle(20)
@@ -177,7 +187,8 @@ if Analysis_Type == "Stability":
     average_charge.Fit('fitFunc')
 
     heightarray = ar.array('d',av_height)
-    average_height = r.TGraph(len(x),x,heightarray)
+    hstdarray = ar.array('d',av_heightSTD)
+    average_height = r.TGraphErrors(len(x),x,heightarray,0.0,hstdarray)
     average_height.SetTitle("Average Pulse Height over Measurment KA0193")
     average_height.SetMarkerColor(2)
     average_height.SetMarkerStyle(20)
@@ -185,7 +196,8 @@ if Analysis_Type == "Stability":
     average_height.Fit('fitFunc')
 
     widtharray = ar.array('d',av_width)
-    average_width = r.TGraph(len(x),x,widtharray)
+    wstdarray = ar.array('d',av_widthSTD)
+    average_width = r.TGraphErrors(len(x),x,widtharray,0.0,wstdarray)
     average_width.SetTitle("Average Pulse Width over Measurment KA0193")
     average_width.SetMarkerColor(2)
     average_width.SetMarkerStyle(20)
