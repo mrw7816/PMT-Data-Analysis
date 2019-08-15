@@ -116,7 +116,7 @@ if Analysis_Type == "Stability":
     Sample_Window = r.TH1F("Sample Window Charge","Sample Window Charge KA0193",100,-2,10)
     pcharge = r.TH1F("Pulse Charge for Sample Window 18 - 45","Sample Pulse Charge KA0193",100,0,40)
     twoDHeight_Average = r.TH2F("2d Height","Height to File Number KA0193",300,0,300,300,0,5)
-    twoDCharge_Average = r.TH2F("2d Charge","Charge to File Number KA0193",100,0,0.01,100,0,0.001)
+    twoDCharge_Average = r.TH2F("2d Charge","Charge to File Number KA0193",300,0,300,300,0,5)
     twoDWidth_Average = r.TH2F("2d Width","Width to File Number KA0193",100,0,0.01,100,0,0.001)
     Ttree = inFile.Get("event")
     av_pulse = []
@@ -161,7 +161,7 @@ if Analysis_Type == "Stability":
             height = 0
             width = 0
             count = 0
-	    File += 1
+	    File += 1.00
 	    twoDCharge_Average.Fill(File,avp)
 
     x = ar.array('d',np.linspace(0,len(av_pulse),num=len(av_pulse)))
