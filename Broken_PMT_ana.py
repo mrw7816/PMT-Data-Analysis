@@ -28,8 +28,8 @@ pulse = r.TH1F("Pulse Charge","Pulse Charge of KA0193",100,0,40)
 pulseheight = r.TH1F("Pulse Height", "Pulse Height of KA0193",100,0,2)
 pulsewidth = r.TH1F("Pulse Width", "Pulse Width of KA0193",100,0,100)
 h2w = r.TH1F("1D Height to Width", "Height to width of KA0193",100,0,1)
-charge_height = r.TH2F("Charge to Height","Charge to Height Ratio of KA0193",100,-1,10,100,-1,100)
-charge_width = r.TH2F("Charge to Width", "Charge to Width Ratio of KA0193",100,0,10,100,0,60)
+charge_height = r.TH2F("Charge to Height","Charge to Height Ratio of KA0193",100,0,10,100,0,2)
+charge_width = r.TH2F("Charge to Width", "Charge to Width Ratio of KA0193",100,0,10,100,0,35)
 height_width = r.TH2F("Height to Width vs Height","Height to Width Ratio vs Height of KA0193",100,0,0.01,100,0,0.001)
 h2w_charge = r.TH2F("Height/Width to Charge", "Height/Width vs Charge for KA0193",100,0,10,100,0,1)
 
@@ -56,8 +56,8 @@ for entryNum in range (0 , Ttree.GetEntries()):
         ht_to_wd = Height[ipul]/Pulse_Width[ipul]
         h2w.Fill(ht_to_wd)
         height_width.Fill(Height[ipul], ht_to_wd)
-        h2w_charge.Fill(ht_to_wd,Pulse[ipul])
-        charge_width.Fill(Pulse_Width[ipul],Pulse[ipul])
+        h2w_charge.Fill(Pulse[ipul],ht_to_wd)
+        charge_width.Fill(Pulse[ipul],Pulse_Width[ipul])
 
 win_charge.SetXTitle("Charge_pC")
 pulse.SetXTitle("Charge_pC")
