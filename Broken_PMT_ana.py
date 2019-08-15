@@ -174,11 +174,12 @@ if Analysis_Type == "Stability":
 	    twoDCharge_Average.Fill(File,avp)
 
     x = ar.array('d',np.linspace(0,len(av_pulse),num=len(av_pulse)))
+    xer = np.zeros(len(av_pulse))
     fitFunc = r.TF1('fitFunc','pol1(0)',0,300)
 
     pulsearray = ar.array('d',av_pulse)
     pstdarray = ar.array('d',av_pulseSTD)
-    average_charge = r.TGraphErrors(len(x),x,pulsearray,0.0,pstdarray)
+    average_charge = r.TGraphErrors(len(x),x,pulsearray,xer,pstdarray)
     average_charge.SetTitle("Average Pulse Charge over Measurment KA0193")
     average_charge.SetMarkerColor(2)
     average_charge.SetMarkerStyle(20)
@@ -188,7 +189,7 @@ if Analysis_Type == "Stability":
 
     heightarray = ar.array('d',av_height)
     hstdarray = ar.array('d',av_heightSTD)
-    average_height = r.TGraphErrors(len(x),x,heightarray,0.0,hstdarray)
+    average_height = r.TGraphErrors(len(x),x,heightarray,xer,hstdarray)
     average_height.SetTitle("Average Pulse Height over Measurment KA0193")
     average_height.SetMarkerColor(2)
     average_height.SetMarkerStyle(20)
@@ -197,7 +198,7 @@ if Analysis_Type == "Stability":
 
     widtharray = ar.array('d',av_width)
     wstdarray = ar.array('d',av_widthSTD)
-    average_width = r.TGraphErrors(len(x),x,widtharray,0.0,wstdarray)
+    average_width = r.TGraphErrors(len(x),x,widtharray,xer,wstdarray)
     average_width.SetTitle("Average Pulse Width over Measurment KA0193")
     average_width.SetMarkerColor(2)
     average_width.SetMarkerStyle(20)
