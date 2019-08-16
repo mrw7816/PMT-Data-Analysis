@@ -19,7 +19,7 @@ PMT = sys.argv[2]
 inFileName = sys.argv [3] #assigns variable names to input and output files
 outFileName = sys.argv [4]
 print " Reading from ", inFileName , "and writing to", outFileName
-
+"""
 inFile = r.TFile.Open ( inFileName ," READ ") #open the TFile
 
 Ttree = inFile.Get("event") #grabs the tree
@@ -31,7 +31,7 @@ h2w = r.TH1F("1D Height to Width", "Height to width of KA0193",100,0,1)
 charge_height = r.TH2F("Charge to Height","Charge to Height Ratio of KA0193",100,0,10,100,0,0.1)
 charge_width = r.TH2F("Charge to Width", "Charge to Width Ratio of KA0193",100,0,10,100,0,35)
 height_width = r.TH2F("Height to Width vs Height","Height to Width Ratio vs Height of KA0193",100,0,0.01,100,0,0.001)
-h2w_charge = r.TH2F("Height/Width to Charge", "Height/Width vs Charge for KA0193",100,0,10,100,0,1)
+h2w_charge = r.TH2F("Height/Width to Charge", "Height/Width vs Charge for KA0193",100,0,10,100,0,0.02)
 
 for entryNum in range (0 , Ttree.GetEntries()):
     Ttree.GetEntry(entryNum)
@@ -96,7 +96,7 @@ h2w.Write()
 h2w_charge.Write()
 charge_width.Write()
 outHistFile.Close()
-
+"""
 if Analysis_Type == "Afterpulsing":
     inFile = r.TFile.Open ( inFileName ," READ ")
     Ttree = inFile.Get("event")
@@ -137,6 +137,7 @@ if Analysis_Type == "Stability":
     av_heightSTD = []
     av_width = []
     av_widthSTD = []
+    PULSES = []
     pulse = 0
     height = 0
     width = 0
@@ -165,8 +166,14 @@ if Analysis_Type == "Stability":
            	count += 1
 		Sample_Window.Fill(WCharge)
            	pcharge.Fill(Pulse[ipul])
+            PULSES.append(Pulse[ipul])
         if (entryNum+1) % 10000 == 0:
-	    avp = pulse / count
+            test1 = sum(PULSES)/len(PULSES)
+            test2 = np.std(PULSES)
+            print(PULSES)
+            print(test1)
+            print(test2)
+            avp = pulse / count
             pulse_std = np.std(pulse)
             av_pulse.append(avp)
             av_pulseSTD.append(pulse_std)
@@ -182,6 +189,7 @@ if Analysis_Type == "Stability":
             height = 0
             width = 0
             count = 0
+            PULSES = []
 	    File += 1.00
 	    twoDCharge_Average.Fill(File,avp)
 
