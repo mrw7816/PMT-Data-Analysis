@@ -166,7 +166,7 @@ if Analysis_Type == "Stability":
 		Sample_Window.Fill(WCharge)
            	pcharge.Fill(Pulse[ipul])
         if (entryNum+1) % 10000 == 0:
-            avp = pulse / count
+	    avp = pulse / count
             pulse_std = np.std(pulse)
             av_pulse.append(avp)
             av_pulseSTD.append(pulse_std)
