@@ -166,17 +166,14 @@ if Analysis_Type == "Stability":
            	count += 1
 		Sample_Window.Fill(WCharge)
            	pcharge.Fill(Pulse[ipul])
-            PULSES.append(Pulse[ipul])
+                PULSES.append(Pulse[ipul])
         if (entryNum+1) % 10000 == 0:
             test1 = sum(PULSES)/len(PULSES)
             test2 = np.std(PULSES)
-            print(PULSES)
-            print(test1)
-            print(test2)
             avp = pulse / count
             pulse_std = np.std(pulse)
-            av_pulse.append(avp)
-            av_pulseSTD.append(pulse_std)
+            av_pulse.append(test1)
+            av_pulseSTD.append(test2)
             avh = height / count
             height_std = np.std(height)
             av_height.append(avh)
