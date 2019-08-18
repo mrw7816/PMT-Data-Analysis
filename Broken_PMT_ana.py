@@ -138,10 +138,8 @@ if Analysis_Type == "Stability":
     av_width = []
     av_widthSTD = []
     PULSES = []
-    pulse = 0
-    height = 0
-    width = 0
-    count = 0
+    HEIGHTS = []
+    WIDTHS = []
     File = 0
     for entryNum in range (0 , Ttree.GetEntries()):
         Ttree.GetEntry(entryNum)
@@ -160,33 +158,27 @@ if Analysis_Type == "Stability":
         Pulse_Width1 = np.subtract(RightE,LeftE)
         for ipul in range(0,Npul-1):
             if 18 < Time[ipul] <45:
-	        pulse += Pulse[ipul]
-           	height += Height[ipul]
-           	width += Pulse_Width1[ipul]
-           	count += 1
 		Sample_Window.Fill(WCharge)
            	pcharge.Fill(Pulse[ipul])
                 PULSES.append(Pulse[ipul])
+                HEIGHTS.append(Height[ipul])
+                WIDTHS.append(Pulse_Width1[ipul])
         if (entryNum+1) % 10000 == 0:
-            test1 = sum(PULSES)/len(PULSES)
-            test2 = np.std(PULSES)
-            avp = pulse / count
-            pulse_std = np.std(pulse)
-            av_pulse.append(test1)
-            av_pulseSTD.append(test2)
-            avh = height / count
-            height_std = np.std(height)
+            avp = sum(PULSES)/len(PULSES)
+            pulse_std = np.std(PULSES)
+            av_pulse.append(avp)
+            av_pulseSTD.append(pulse_std)
+            avh = sum(HEIGHTS)/len(HEIGHTS)
+            height_std = np.std(HEIGHTS)
             av_height.append(avh)
             av_heightSTD.append(height_std)
-            avw = width / count
-            width_std = np.std(width)
+            avw = sum(WIDTHS)/len(WIDTHS)
+            width_std = np.std(WIDTHS)
             av_width.append(avw)
             av_widthSTD.append(width_std)
-            pulse = 0
-            height = 0
-            width = 0
-            count = 0
             PULSES = []
+            HEIGHTS = []
+            WIDTHS = []
 	    File += 1.00
 	    twoDCharge_Average.Fill(File,avp)
 
