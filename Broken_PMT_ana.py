@@ -19,19 +19,19 @@ PMT = sys.argv[2]
 inFileName = sys.argv [3] #assigns variable names to input and output files
 outFileName = sys.argv [4]
 print " Reading from ", inFileName , "and writing to", outFileName
-"""
+
 inFile = r.TFile.Open ( inFileName ," READ ") #open the TFile
 
 Ttree = inFile.Get("event") #grabs the tree
-win_charge = r.TH1F("Window Charge","Window Charge of KA0193 ",100,-2,10)
-pulse = r.TH1F("Pulse Charge","Pulse Charge of KA0193",100,0,40)
-pulseheight = r.TH1F("Pulse Height", "Pulse Height of KA0193",100,0,2)
-pulsewidth = r.TH1F("Pulse Width", "Pulse Width of KA0193",100,0,100)
-h2w = r.TH1F("1D Height to Width", "Height to width of KA0193",100,0,1)
-charge_height = r.TH2F("Charge to Height","Charge to Height Ratio of KA0193",100,0,10,100,0,0.1)
-charge_width = r.TH2F("Charge to Width", "Charge to Width Ratio of KA0193",100,0,10,100,0,35)
-height_width = r.TH2F("Height to Width vs Height","Height to Width Ratio vs Height of KA0193",100,0,0.01,100,0,0.001)
-h2w_charge = r.TH2F("Height/Width to Charge", "Height/Width vs Charge for KA0193",100,0,10,100,0,0.02)
+win_charge = r.TH1F("Window Charge","Window Charge of KA0181 ",100,-2,10)
+pulse = r.TH1F("Pulse Charge","Pulse Charge of KA0181",100,0,40)
+pulseheight = r.TH1F("Pulse Height", "Pulse Height of KA0181",100,0,2)
+pulsewidth = r.TH1F("Pulse Width", "Pulse Width of KA0181",100,0,100)
+h2w = r.TH1F("1D Height to Width", "Height to width of KA0181",100,0,1)
+charge_height = r.TH2F("Charge to Height","Charge to Height Ratio of KA0181",100,0,10,100,0,0.1)
+charge_width = r.TH2F("Charge to Width", "Charge to Width Ratio of KA0181",100,0,10,100,0,35)
+height_width = r.TH2F("Height to Width vs Height","Height to Width Ratio vs Height of KA0181",100,0,0.01,100,0,0.001)
+h2w_charge = r.TH2F("Height/Width to Charge", "Height/Width vs Charge for KA0181",100,0,10,100,0,0.02)
 
 for entryNum in range (0 , Ttree.GetEntries()):
     Ttree.GetEntry(entryNum)
@@ -96,11 +96,11 @@ h2w.Write()
 h2w_charge.Write()
 charge_width.Write()
 outHistFile.Close()
-"""
+
 if Analysis_Type == "Afterpulsing":
     inFile = r.TFile.Open ( inFileName ," READ ")
     Ttree = inFile.Get("event")
-    After_Pulse = r.TH2F("Time vs Charge", "Time to Charge for KA0193",1000,0,14,1000,0,1200)
+    After_Pulse = r.TH2F("Time vs Charge", "Time to Charge for KA0181",1000,0,14,1000,0,1200)
     for entryNum in range (0 , Ttree.GetEntries()):
         Ttree.GetEntry(entryNum)
         WCharge = getattr(Ttree,"fWindowCharge_pC")
@@ -113,8 +113,8 @@ if Analysis_Type == "Afterpulsing":
             if Pulse > float(0.8):
                 After_Pulse.Fill(WCharge,Time[ipul],Pulse[ipul])
 
-    After_Pulse.SetXTitle("Charge_pC")
-    After_Pulse.SetYTitle("Time/Charge")
+    After_Pulse.SetXTitle("Window Charge_pC")
+    After_Pulse.SetYTitle("Time_ns")
     After_Pulse.Scale(1.0/After_Pulse.Integral())
     After_Pulse.SetDirectory(0)
     inFile.Close()
@@ -125,11 +125,11 @@ if Analysis_Type == "Afterpulsing":
 
 if Analysis_Type == "Stability":
     inFile = r.TFile.Open ( inFileName ," READ ")
-    Sample_Window = r.TH1F("Sample Window Charge","Sample Window Charge KA0193",100,-2,10)
-    pcharge = r.TH1F("Pulse Charge for Sample Window 18 - 45","Sample Pulse Charge KA0193",100,0,40)
-    twoDHeight_Average = r.TH2F("2d Height","Height to File Number KA0193",300,0,300,300,0,5)
-    twoDCharge_Average = r.TH2F("2d Charge","Charge to File Number KA0193",300,0,300,300,0,5)
-    twoDWidth_Average = r.TH2F("2d Width","Width to File Number KA0193",100,0,0.01,100,0,0.001)
+    Sample_Window = r.TH1F("Sample Window Charge","Sample Window Charge KA0181",100,-2,10)
+    pcharge = r.TH1F("Pulse Charge for Sample Window 18 - 45","Sample Pulse Charge KA0181",100,0,40)
+    twoDHeight_Average = r.TH2F("2d Height","Height to File Number KA0181",300,0,300,300,0,5)
+    twoDCharge_Average = r.TH2F("2d Charge","Charge to File Number KA0181",300,0,300,300,0,5)
+    twoDWidth_Average = r.TH2F("2d Width","Width to File Number KA0181",100,0,0.01,100,0,0.001)
     Ttree = inFile.Get("event")
     av_pulse = []
     av_pulseSTD = []
