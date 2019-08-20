@@ -101,7 +101,7 @@ if Analysis_Type == "Afterpulsing":
     inFile = r.TFile.Open ( inFileName ," READ ")
     Ttree = inFile.Get("event")
     After_Pulse = r.TH2F("Time vs Charge", "Time to Charge for KA0181",1000,0,14,1000,0,1800)
-    Ratio = r.TH1F("Absolute AP Ratio", "Afterpule Ratio", 1000,0,1200)
+    Ratio = r.TH1F("Absolute AP Ratio", "Afterpulse Ratio", 1000,0,1800)
     for entryNum in range (0 , Ttree.GetEntries()):
         Ttree.GetEntry(entryNum)
         WCharge = getattr(Ttree,"fWindowCharge_pC")
@@ -112,20 +112,20 @@ if Analysis_Type == "Afterpulsing":
         Pulse.SetSize(Npul)
         for ipul in range(0,Npul-1):
             if Pulse > float(0.4):
-                weight = 1/WCharge
-                Ratio.Fill(Time[ipul],weight)
+#                weight = 1/WCharge
+                Ratio.Fill(Time[ipul])
                 After_Pulse.Fill(WCharge,Time[ipul],Pulse[ipul])
 
-    fitFunc = r.TF1('fitFunc','gaus(0)',400,800)
-    fitFunc2 = r.TF1('fitFunc2','gaus(0)',825,1350)
-    fitFun3 = r.TF1('fitFunc3','gaus(0)',1375,1800)
+    fitFunc = r.TF1('fitFunc','gaus',400,800)
+    fitFunc2 = r.TF1('fitFunc2','gaus',825,1350)
+    fitFunc3 = r.TF1('fitFunc3','gaus',1375,1800)
     After_Pulse.SetXTitle("Window Charge_pC")
     After_Pulse.SetYTitle("Time_ns")
     Ratio.SetXTitle("Time_ns")
     r.gStyle.SetOptFit()
-    Ratio.Fit('fitFunc',R)
-    Ratio.Fit('fitFunc2',R+)
-    Ratio.Fit('fitFunc3',R+)
+    Ratio.Fit('fitFunc','R')
+    Ratio.Fit('fitFunc2','R+')
+    Ratio.Fit('fitFunc3','R+')
 
 
     After_Pulse.SetDirectory(0)
