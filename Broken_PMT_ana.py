@@ -101,7 +101,7 @@ if Analysis_Type == "Afterpulsing":
     inFile = r.TFile.Open ( inFileName ," READ ")
     Ttree = inFile.Get("event")
     After_Pulse = r.TH2F("Time vs Charge", "Time to Charge for KA0181",1000,0,14,1000,0,1800)
-    Ratio = r.TH1F("Absolute AP Ratio", "Afterpulse Ratio", 1000,0,1800)
+    Ratio = r.TH1F("Absolute AP Ratio", "Afterpulse Ratio", 500,0,1800)
     Scale = 0
     for entryNum in range (0 , Ttree.GetEntries()):
         Ttree.GetEntry(entryNum)
@@ -118,7 +118,7 @@ if Analysis_Type == "Afterpulsing":
                 Ratio.Fill(Time[ipul],weight)
                 After_Pulse.Fill(WCharge,Time[ipul],Pulse[ipul])
 
-    Ratio.Scale(Scale)
+    Ratio.Scale(1/Scale)
     fitFunc = r.TF1('fitFunc','gaus',400,800)
     fitFunc2 = r.TF1('fitFunc2','gaus',825,1350)
     fitFunc3 = r.TF1('fitFunc3','gaus',1375,1800)
@@ -129,7 +129,9 @@ if Analysis_Type == "Afterpulsing":
     Ratio.Fit('fitFunc','R')
     Ratio.Fit('fitFunc2','R+')
     Ratio.Fit('fitFunc3','R+')
-    print(fitFunc.Integral())
+    print "Integral of first peak = ", fitFunc.Integral(400,800)
+    print "Integral of second peak = ", fitFunc2.Integral(825,1350)
+    print "Integral of third peak = ", fitFunc3.Integral(1375,1800)
 
 
     After_Pulse.SetDirectory(0)
