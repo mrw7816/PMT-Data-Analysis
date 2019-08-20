@@ -102,7 +102,7 @@ if Analysis_Type == "Afterpulsing":
     Ttree = inFile.Get("event")
     After_Pulse = r.TH2F("Time vs Charge", "Time to Charge for KA0181",1000,0,14,1000,0,1800)
     Ratio = r.TH1F("Absolute AP Ratio", "Afterpulse Ratio", 500,0,1800)
-    Scale = 0
+    Scale = 0.0
     for entryNum in range (0 , Ttree.GetEntries()):
         Ttree.GetEntry(entryNum)
         WCharge = getattr(Ttree,"fWindowCharge_pC")
@@ -111,12 +111,13 @@ if Analysis_Type == "Afterpulsing":
         Npul = getattr(Ttree,"nPulses")
         Time.SetSize(Npul)
         Pulse.SetSize(Npul)
-        for ipul in range(0,Npul-1):
-            if WCharge > float(0.4):
-                Scale +=1
-                weight = 1/WCharge
-                Ratio.Fill(Time[ipul],weight)
-                After_Pulse.Fill(WCharge,Time[ipul],Pulse[ipul])
+        if WCharge > float(0.4):
+            Scale +=1.0
+            weight = 1.0/WCharge
+            for ipul in range(0,Npul-1):
+                if Pulse > float(0.4):
+                    Ratio.Fill(Time[ipul],weight)
+                    After_Pulse.Fill(WCharge,Time[ipul],Pulse[ipul])
 
     Ratio.Scale(1/Scale)
     fitFunc = r.TF1('fitFunc','gaus',400,800)
