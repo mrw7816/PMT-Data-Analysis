@@ -113,7 +113,8 @@ if Analysis_Type == "Afterpulsing":
         Pulse.SetSize(Npul)
         if WCharge > float(0.4):
             Scale +=1.0
-            weight = 1.0/WCharge
+            WCbyPE = WCharge / 1.6
+            weight = 1.0/WCbyPE
             for ipul in range(0,Npul-1):
                 if Pulse > float(0.4):
                     Ratio.Fill(Time[ipul],weight)
