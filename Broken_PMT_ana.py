@@ -113,30 +113,29 @@ if Analysis_Type == "Afterpulsing":
         Pulse.SetSize(Npul)
         if WCharge > float(0.4):
             Scale +=1.0
-            WCbyPE = WCharge / 1.6
-            weight = 1.0/WCbyPE
             for ipul in range(0,Npul-1):
                 if Pulse > float(0.4):
-                    Ratio.Fill(Time[ipul],weight)
+                    weight = Pulse[ipul]/WCharge
+		    Ratio.Fill(Time[ipul],weight)
                     After_Pulse.Fill(WCharge,Time[ipul],Pulse[ipul])
 
-    Ratio.Scale(1/Scale)
+    Ratio.Scale(1/(Scale*Ratio.GetBinWidth(1)))
     fitFunc = r.TF1('fitFunc','gausn',400,800)
     fitFunc2 = r.TF1('fitFunc2','gausn',825,1350)
     fitFunc3 = r.TF1('fitFunc3','gausn',1375,1800)
-    fitFuncAll = r.TF1('fitFuncAll','gausn(0)+gausn(3)+gausn(6)',400,1800)
+    #fitFuncAll = r.TF1('fitFuncAll','gausn(0)+gausn(3)+gausn(6)',400,1800)
     After_Pulse.SetXTitle("Window Charge_pC")
     After_Pulse.SetYTitle("Time_ns")
     Ratio.SetXTitle("Time_ns")
     r.gStyle.SetOptFit()
-    #Ratio.Fit('fitFunc','R')
-    #Ratio.Fit('fitFunc2','R+')
-    #Ratio.Fit('fitFunc3','R+')
-    Ratio.Fit('fitFuncAll','R')
-    #print "Integral of first peak = ", fitFunc.Integral(400,800)
-    #print "Integral of second peak = ", fitFunc2.Integral(825,1350)
-    #print "Integral of third peak = ", fitFunc3.Integral(1375,1800)
-    print "Integral of All =",fitFuncAll.Integral(400,1800)
+    Ratio.Fit('fitFunc','R')
+    Ratio.Fit('fitFunc2','R+')
+    Ratio.Fit('fitFunc3','R+')
+    #Ratio.Fit('fitFuncAll','R')
+    print "Integral of first peak = ", fitFunc.Integral(400,800)
+    print "Integral of second peak = ", fitFunc2.Integral(825,1350)
+    print "Integral of third peak = ", fitFunc3.Integral(1375,1800)
+    #print "Integral of All =",fitFuncAll.Integral(400,1800)
 
     After_Pulse.SetDirectory(0)
     Ratio.SetDirectory(0)
