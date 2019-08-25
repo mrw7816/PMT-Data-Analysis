@@ -135,7 +135,13 @@ if Analysis_Type == "Afterpulsing":
     print "Integral of first peak = ", fitFunc.Integral(400,800)
     print "Integral of second peak = ", fitFunc2.Integral(825,1350)
     print "Integral of third peak = ", fitFunc3.Integral(1375,1800)
+    APRatio = fitFunc.Integral(400,800) + fitFunc2.Integral(825,1350) + fitFunc3.Integral(1375,1800)
+    print "Total Afterpulsing Ratio = ", APRatio
     #print "Integral of All =",fitFuncAll.Integral(400,1800)
+
+    t = r.TText(0,1,'a' )
+    t.SetTextSize(0.08)
+    t.DrawText(4,400, APRatio)
 
     After_Pulse.SetDirectory(0)
     Ratio.SetDirectory(0)
