@@ -33,6 +33,17 @@ charge_width = r.TH2F("Charge to Width", "Charge to Width Ratio of KA0181",100,0
 height_width = r.TH2F("Height to Width vs Height","Height to Width Ratio vs Height of KA0181",100,0,0.01,100,0,0.001)
 h2w_charge = r.TH2F("Height/Width to Charge", "Height/Width vs Charge for KA0181",100,0,10,100,0,0.02)
 
+#list of plots that go through only charge cut
+pulseheight_C = r.TH1F("Pulse Height", "Pulse Height of KA0181 (Charge Cut)",100,0,2)
+pulsewidth_C = r.TH1F("Pulse Width", "Pulse Width of KA0181 (Charge Cut)",100,0,100)
+h2w_C = r.TH1F("1D Height to Width", "Height to width of KA0181 (Charge Cut)",100,0,1)
+charge_height_C = r.TH2F("Charge to Height","Charge to Height Ratio of KA0181 (Charge Cut)",100,0,10,100,0,0.1)
+charge_width_C = r.TH2F("Charge to Width", "Charge to Width Ratio of KA0181 (Charge Cut)",100,0,10,100,0,35)
+height_width_C = r.TH2F("Height to Width vs Height","Height to Width Ratio vs Height of KA0181 (Charge Cut)",100,0,0.01,100,0,0.001)
+h2w_charge_C = r.TH2F("Height/Width to Charge", "Height/Width vs Charge for KA0181 (Charge Cut)",100,0,10,100,0,0.02)
+
+
+
 for entryNum in range (0 , Ttree.GetEntries()):
     Ttree.GetEntry(entryNum)
     WCharge = getattr(Ttree,"fWindowCharge_pC")
@@ -58,6 +69,14 @@ for entryNum in range (0 , Ttree.GetEntries()):
         height_width.Fill(Height[ipul], ht_to_wd)
         h2w_charge.Fill(Pulse[ipul],ht_to_wd)
         charge_width.Fill(Pulse[ipul],Pulse_Width[ipul])
+        if Pulse > float(0.4):
+            pulseheight_C.Fill(Height[ipul])
+            pulsewidth_C.Fill(Pulse_Width[ipul])
+            h2w_C.Fill(ht_to_wd)
+            charge_height_C.Fill(Pulse[ipul], Height[ipul])
+            charge_width_C.Fill(Pulse[ipul],Pulse_Width[ipul])
+            height_width_C.Fill(Height[ipul], ht_to_wd)
+            h2w_charge_C.Fill(Pulse[ipul],ht_to_wd)
 
 win_charge.SetXTitle("Charge_pC")
 pulse.SetXTitle("Charge_pC")
@@ -139,9 +158,13 @@ if Analysis_Type == "Afterpulsing":
     print "Total Afterpulsing Ratio = ", APRatio
     #print "Integral of All =",fitFuncAll.Integral(400,1800)
 
-    t = r.TText(0.5,0.5)
-    t.SetTextSize(0.08)
-    t.DrawText(4,400, APRatio)
+    t = ROOT.TLatex()
+    t.SetTextFont(32)
+    t.SetTextColor(1)
+    t.SetTextSize(0.03)
+    t.SetTextAlign(12)
+    t.DrawLatex( 3.1, 15.5, 'Testing')
+    saves[ 't' ] = t
 
     After_Pulse.SetDirectory(0)
     Ratio.SetDirectory(0)
