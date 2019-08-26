@@ -139,7 +139,7 @@ if Analysis_Type == "Afterpulsing":
     print "Total Afterpulsing Ratio = ", APRatio
     #print "Integral of All =",fitFuncAll.Integral(400,1800)
 
-    t = r.TText(0,1,'a' )
+    t = r.TText(0.5,0.5)
     t.SetTextSize(0.08)
     t.DrawText(4,400, APRatio)
 
