@@ -34,13 +34,13 @@ height_width = r.TH2F("Height to Width vs Height","Height to Width Ratio vs Heig
 h2w_charge = r.TH2F("Height/Width to Charge", "Height/Width vs Charge for KA0181",100,0,10,100,0,0.02)
 
 #list of plots that go through only charge cut
-pulseheight_C = r.TH1F("Pulse Height", "Pulse Height of KA0181 (Charge Cut)",100,0,2)
-pulsewidth_C = r.TH1F("Pulse Width", "Pulse Width of KA0181 (Charge Cut)",100,0,100)
-h2w_C = r.TH1F("1D Height to Width", "Height to width of KA0181 (Charge Cut)",100,0,1)
-charge_height_C = r.TH2F("Charge to Height","Charge to Height Ratio of KA0181 (Charge Cut)",100,0,10,100,0,0.1)
-charge_width_C = r.TH2F("Charge to Width", "Charge to Width Ratio of KA0181 (Charge Cut)",100,0,10,100,0,35)
-height_width_C = r.TH2F("Height to Width vs Height","Height to Width Ratio vs Height of KA0181 (Charge Cut)",100,0,0.01,100,0,0.001)
-h2w_charge_C = r.TH2F("Height/Width to Charge", "Height/Width vs Charge for KA0181 (Charge Cut)",100,0,10,100,0,0.02)
+pulseheight_C = r.TH1F("Pulse Height C ", "Pulse Height of KA0181 (Charge Cut)",100,0,2)
+pulsewidth_C = r.TH1F("Pulse Width C", "Pulse Width of KA0181 (Charge Cut)",100,0,100)
+h2w_C = r.TH1F("1D Height to Width C", "Height to width of KA0181 (Charge Cut)",100,0,1)
+charge_height_C = r.TH2F("Charge to Height C","Charge to Height Ratio of KA0181 (Charge Cut)",100,0,10,100,0,0.1)
+charge_width_C = r.TH2F("Charge to Width C", "Charge to Width Ratio of KA0181 (Charge Cut)",100,0,10,100,0,35)
+height_width_C = r.TH2F("Height to Width vs Height C","Height to Width Ratio vs Height of KA0181 (Charge Cut)",100,0,0.01,100,0,0.001)
+h2w_charge_C = r.TH2F("Height/Width to Charge C", "Height/Width vs Charge for KA0181 (Charge Cut)",100,0,10,100,0,0.02)
 
 
 
@@ -177,8 +177,7 @@ if Analysis_Type == "Afterpulsing":
     t.SetTextColor(1)
     t.SetTextSize(0.03)
     t.SetTextAlign(12)
-    t.DrawLatex( 3.1, 15.5, 'Testing')
-    saves[ 't' ] = t
+    t.DrawLatex( 800, 0.001, 'Total Afterpulse Percentage = ')
 
     After_Pulse.SetDirectory(0)
     Ratio.SetDirectory(0)
