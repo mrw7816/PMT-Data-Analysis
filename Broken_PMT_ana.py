@@ -23,7 +23,7 @@ print " Reading from ", inFileName , "and writing to", outFileName
 inFile = r.TFile.Open ( inFileName ," READ ") #open the TFile
 
 Ttree = inFile.Get("event") #grabs the tree
-win_charge = r.TH1F("Window Charge","Window Charge of KA0181 ",100,-2,10)
+win_charge = r.TH1F("Window Charge","Window Charge of " +str(PMT),100,-2,10)
 pulse = r.TH1F("Pulse Charge","Pulse Charge of KA0181",100,0,40)
 pulseheight = r.TH1F("Pulse Height", "Pulse Height of KA0181",100,0,2)
 pulsewidth = r.TH1F("Pulse Width", "Pulse Width of KA0181",100,0,100)
@@ -177,7 +177,7 @@ if Analysis_Type == "Afterpulsing":
     t.SetTextColor(1)
     t.SetTextSize(0.03)
     t.SetTextAlign(12)
-    t.DrawLatex( 800, 0.001, 'Total Afterpulse Percentage = ')
+    t.DrawLatex( 800, 0.001, 'Total Afterpulse Percentage = '+str(APRatio))
 
     After_Pulse.SetDirectory(0)
     Ratio.SetDirectory(0)
